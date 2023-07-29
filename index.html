@@ -10,10 +10,13 @@
         
         cityMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([0,200]);
         hwyMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([200,0]);
+        padding = 50;
         
+        // scatter plot
         d3.select("svg")
           .append("g")
-            .attr("transform", "translate(50,50)")
+            .attr("transform", "translate(" + padding + "," + padding + ")")
+            .attr("id", "chart-field")
             .selectAll("circle")
             .data(data)
             .enter()
@@ -25,6 +28,7 @@
             .style("opacity", 0.1)
             .style("stroke", "black");
         
+        //x-axis
         d3.select("svg")
         .append("g")
         .attr("transform", "translate(50,50)")
@@ -33,12 +37,35 @@
               .tickValues([10,20,50,100])
              );
         
+        // x-axis title
+        d3.select("svg")
+        .append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "middle")
+        .attr("x", 150)
+        .attr("y", 300 - 10)
+        .attr("font-size",18)
+        .text("Average City MPG");
+        
+        // y-axis
         d3.select("svg")
         .append("g")
         .attr("transform", "translate(50,250)")
         .call(d3.axisBottom(cityMPG_scale)
               .tickFormat(d3.format("1.0s"))
               .tickValues([10,20,50,100]));
+        
+        // y-axis title
+        d3.select("svg")
+        .append("text")
+        .attr("class", "y label")
+        .attr("text-anchor", "end")
+        .attr("y", 10)
+        .attr("dy", ".35em")
+        .attr("x", -70)
+        .attr("transform", "rotate(-90)")
+          .attr("font-size",18)
+        .text("Average Highway MPG");
         
       }
     </script>
