@@ -7,19 +7,43 @@
 <script>
       async function init() {
         data = await d3.csv("https://flunky.github.io/cars2017.csv");
+        //console.log(data);
         
+        // JSON of number of cylinders: number of occurances in dataset
+        var cylinderTally = data.reduce(function(acc, car) {
+          if (!acc[car.EngineCylinders])
+            acc[car.EngineCylinders] = 1;
+          else
+            acc[car.EngineCylinders]++;   
+          return acc;
+        }, {});
+        console.log(cylinderTally)
+        
+        // returns the data d, filtered for only those cars with cylinders cyl
+        function getData(cyl, d){
+        let newData = d.filter((item)=>item.EngineCylinders === cyl);
+          return newData
+        }
+        // console.log(getData("8", data))
         
         var paddingAroundChart = 50;
         var canvasWidth = 400;
         var canvasHeight = 400;
         var axisFontSize = 18;
+        var engineSizes = [0,2,3,4,6,8,10,12];
+        
+        // Canvas
+        d3.select("svg")
+        .attr("width", canvasWidth)
+        .attr("height", canvasHeight)
+        .attr("id", "scatter-plot");
+        
+        // Scatter plot
         cityMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([0,canvasWidth - 2*paddingAroundChart]);
         hwyMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([canvasHeight - 2*paddingAroundChart,0]);
         
         // scatter plot
-        d3.select("svg")
-        .attr("width", canvasWidth)
-        .attr("height", canvasHeight)
+        d3.select("#scatter-plot")
           .append("g")
             .attr("transform", "translate(" + paddingAroundChart + "," + paddingAroundChart + ")")
             .attr("id", "chart-field")
@@ -34,8 +58,8 @@
             .style("opacity", 0.1)
             .style("stroke", "black");
         
-        //y-axis
-        d3.select("svg")
+        // scatter -- y-axis
+        d3.select("#scatter-plot")
         .append("g")
         .attr("transform", "translate(" + paddingAroundChart +"," + paddingAroundChart +")")
         .call(d3.axisLeft(hwyMPG_scale)
@@ -43,8 +67,8 @@
               .tickValues([10,20,50,100])
              );
         
-        // y-axis title
-        d3.select("svg")
+        // scatter -- y-axis title
+        d3.select("#scatter-plot")
         .append("text")
         .attr("class", "y label")
         .attr("text-anchor", "middle")
@@ -55,16 +79,16 @@
         .text("Average Highway MPG");
         
         
-        // x-axis
-        d3.select("svg")
+        // scatter -- x-axis
+        d3.select("#scatter-plot")
         .append("g")
         .attr("transform", "translate(" + paddingAroundChart +"," + (canvasHeight - paddingAroundChart)  +")")
         .call(d3.axisBottom(cityMPG_scale)
               .tickFormat(d3.format("1.0s"))
               .tickValues([10,20,50,100]));
         
-        // x-axis title
-        d3.select("svg")
+        // scatter -- x-axis title
+        d3.select("#scatter-plot")
         .append("text")
         .attr("class", "x label")
         .attr("text-anchor", "middle")
@@ -73,6 +97,12 @@
         .attr("font-size", axisFontSize)
         .text("Average City MPG");
         
+        // new canvas for bar chart
+        d3.select("#body")
+          .append("svg")
+          .attr("id", "bar-chart")
+          .attr("width", canvasWidth)
+          .attr("height", canvasHeight)
         
         
       }
