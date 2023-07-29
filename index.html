@@ -22,17 +22,23 @@
             .attr("cy", function(d, i) {return hwyMPG_scale(d.AverageHighwayMPG);})
             .attr("r", function(d) {return Number(d.EngineCylinders) + 2;})
             .style("fill", "lightblue")
+            .style("opacity", 0.1)
             .style("stroke", "black");
         
         d3.select("svg")
         .append("g")
         .attr("transform", "translate(50,50)")
-        .call(d3.axisLeft(hwyMPG_scale).tickValues([10,20,50,100]));
+        .call(d3.axisLeft(hwyMPG_scale)
+              .tickFormat(d3.format("1.0s"))
+              .tickValues([10,20,50,100])
+             );
         
         d3.select("svg")
         .append("g")
         .attr("transform", "translate(50,250)")
-        .call(d3.axisBottom(cityMPG_scale).tickValues([10,20,50,100]));
+        .call(d3.axisBottom(cityMPG_scale)
+              .tickFormat(d3.format("1.0s"))
+              .tickValues([10,20,50,100]));
         
       }
     </script>
