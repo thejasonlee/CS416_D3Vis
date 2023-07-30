@@ -33,6 +33,7 @@
         var engineSizes = [0,2,3,4,6,8,10,12];
         var engineSizeCounts = [10,1,4,52,39,30,3,7];
         var paddingAroundBars = 0;
+        var myFont = "sans-sarif";
         
         // Canvas
         d3.select("svg")
@@ -67,7 +68,8 @@
         .call(d3.axisLeft(hwyMPG_scale)
               .tickFormat(d3.format("1.0s"))
               .tickValues([10,20,50,100])
-             );
+             )
+        .attr("font-family", myFont);
         
         // scatter -- y-axis title
         d3.select("#scatter-plot")
@@ -78,7 +80,8 @@
         .attr("x", -(canvasHeight/2))
         .attr("transform", "rotate(-90)")
           .attr("font-size", axisFontSize)
-        .text("Average Highway MPG");
+        .text("Average Highway MPG")
+        .attr("font-family", myFont);
         
         
         // scatter -- x-axis
@@ -87,7 +90,8 @@
         .attr("transform", "translate(" + paddingAroundChart +"," + (canvasHeight - paddingAroundChart)  +")")
         .call(d3.axisBottom(cityMPG_scale)
               .tickFormat(d3.format("1.0s"))
-              .tickValues([10,20,50,100]));
+              .tickValues([10,20,50,100]))
+        .attr("font-family", myFont);
         
         // scatter -- x-axis title
         d3.select("#scatter-plot")
@@ -97,7 +101,8 @@
         .attr("x", canvasWidth / 2)
         .attr("y", canvasHeight - 10)
         .attr("font-size", axisFontSize)
-        .text("Average City MPG");
+        .text("Average City MPG")
+        .attr("font-family", myFont);
         
         // scatter -- prompt
         d3.select("#scatter-plot")
@@ -107,7 +112,8 @@
         .attr("y", 100)
         .attr("x", 75)
           .attr("font-size", axisFontSize)
-        .text("Click in chart to return");
+        .text("Click in chart to return")
+        .attr("font-family", myFont);
         
         // new canvas for bar chart
         d3.select("body")
@@ -122,17 +128,29 @@
         
         d3.select("#bar-chart")
           .append("g")
-          //.attr("transform", "translate(" + paddingAroundChart + "," + paddingAroundChart + ")")
+          .attr("transform", "translate(" + paddingAroundChart + "," + paddingAroundChart + ")")
           .selectAll("rect")
           .data(engineSizeCounts)
           .enter()
           .append("rect")
-          .attr("x",function(d,i) {return i*((canvasWidth - 2*paddingAroundChart)/engineSizeCounts.length) + paddingAroundChart;})
-          .attr("y", function(d) {return bar_y_scale(d) + paddingAroundChart})
+          .attr("x",function(d,i) {return i*((canvasWidth - 2*paddingAroundChart)/engineSizeCounts.length);})
+          .attr("y", function(d) {return bar_y_scale(d)})
           .attr("width", (canvasWidth - 2*paddingAroundChart)/engineSizeCounts.length)
           .attr("height", function(d) {return canvasHeight - 2*paddingAroundChart - bar_y_scale(d);})
           .style("fill", "lightblue")
           .style("stroke", "black");
+        
+        d3.select("#bar-chart")
+        .selectAll("text")
+        .data(engineSizeCounts)
+        .enter()
+        .append("text")
+        .text(function (d) {return d;})
+        .attr("text-anchor","middle")
+        .attr("x", function(d,i){return i*((canvasWidth-2*paddingAroundChart) / engineSizeCounts.length) + 67})
+        .attr("y",function(d){return bar_y_scale(d) + paddingAroundChart - 5;})
+        .attr("font-family", myFont);
+         
         
         // bar -- x-axis
         d3.select("#bar-chart")
@@ -148,7 +166,8 @@
         .attr("x", canvasWidth / 2)
         .attr("y", canvasHeight - 10)
         .attr("font-size", axisFontSize)
-        .text("Number of Cylindars");
+        .text("Number of Cylindars")
+        .attr("font-family", myFont);
         
         
         // bar -- y-axis
@@ -166,7 +185,8 @@
         .attr("x", -(canvasHeight/2))
         .attr("transform", "rotate(-90)")
           .attr("font-size", axisFontSize)
-        .text("Number of Cars in Dataset");
+        .text("Number of Cars in Dataset")
+        .attr("font-family", myFont);
         
         // bar -- prompt
         d3.select("#bar-chart")
@@ -176,7 +196,8 @@
         .attr("y", 100)
         .attr("x", 250)
           .attr("font-size", axisFontSize)
-        .text("Click bars for more");
+        .text("Click bars for more")
+        .attr("font-family", myFont);
           
         
       }
