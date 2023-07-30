@@ -154,6 +154,10 @@
           .attr("width", canvasWidth)
           .attr("height", canvasHeight);
         
+        // Scales
+        
+        var scatterData = getFilteredData(data, 4);
+        
         function getCityMPGValues(someData){
           var result = [];
           for (let i = 0; i < someData.length; i++) {
@@ -169,13 +173,12 @@
           }
           return result;
         }
-        console.log(getHighwayMPGValues(data));
+        //console.log(getHighwayMPGValues(data));
         
-        // Scatter plot
-        var maxCityMPG = d3.max(getCityMPGValues(data));
-        var maxHwyMPG = d3.max(getHighwayMPGValues(data));
-        cityMPG_scale = d3.scaleLog().base(10).domain([10,maxCityMPG]).range([0,canvasWidth - 2*paddingAroundChart]);
-        hwyMPG_scale = d3.scaleLog().base(10).domain([10,maxHwyMPG]).range([canvasHeight - 2*paddingAroundChart,0]);
+        var maxCityMPG = d3.max(getCityMPGValues(scatterData));
+        var maxHwyMPG = d3.max(getHighwayMPGValues(scatterData));
+        cityMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([0,canvasWidth - 2*paddingAroundChart]);
+        hwyMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([canvasHeight - 2*paddingAroundChart,0]);
         
         // scatter plot
         d3.select("#scatter-plot")
@@ -183,7 +186,7 @@
             .attr("transform", "translate(" + paddingAroundChart + "," + paddingAroundChart + ")")
             .attr("id", "scatter-chart-field")
             .selectAll("circle")
-            .data(data)
+            .data(scatterData)
             .enter()
             .append("circle")
             .attr("cx", function(d, i) {return cityMPG_scale(d.AverageCityMPG);})
