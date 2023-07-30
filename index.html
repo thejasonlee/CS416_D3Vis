@@ -20,7 +20,7 @@
             acc[car.EngineCylinders]++;   
           return acc;
         }, {});
-        console.log(cylinderTally)
+        // console.log(cylinderTally)
         
         // returns the data d, filtered for only those cars with cylinders cyl
         function getData(cyl, d){
@@ -28,6 +28,12 @@
           return newData
         }
         // console.log(getData("8", data))
+        
+        function getFilteredData(totalData, numCyl) {
+          return totalData.filter(function(car) { return car.EngineCylinders === String(numCyl); });
+        }
+        
+        // console.log("filtered on cylinder:", getFilteredData(data, 3));
         
         
         // ---------------------------
@@ -82,7 +88,7 @@
           })
           .on("mouseout", function(){
             d3.select("#bar-tooltip").remove();
-        }); 
+          }); 
         
         // bar -- x-axis
         d3.select("#bar-chart")
