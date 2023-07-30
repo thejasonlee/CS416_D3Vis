@@ -63,8 +63,9 @@
         bar_x_scale = d3.scaleBand().domain([0,2,3,4,6,8,10,12]).range([0,canvasWidth - 2*paddingAroundChart]);
         bar_y_scale = d3.scaleLinear().domain([0,52]).range([canvasHeight - 2*paddingAroundChart,0]);
         
-        d3.select("#bar-chart")
+        var bars = d3.select("#bar-chart")
           .append("g")
+          .attr("id", "bar-field")
           .attr("transform", "translate(" + paddingAroundChart + "," + paddingAroundChart + ")")
           .selectAll("rect")
           .data(engineSizeCounts)
@@ -75,22 +76,29 @@
           .attr("width", (canvasWidth - 2*paddingAroundChart)/engineSizeCounts.length)
           .attr("height", function(d) {return canvasHeight - 2*paddingAroundChart - bar_y_scale(d);})
           .style("fill", "lightblue")
-          .style("stroke", "black")
-          .on("mouseover", function(d){
-            d3.select("#bar-chart").append("text")
-            .text(d)
-            .attr("text-anchor","middle")
-            .attr("x", parseFloat(d3.select(this).attr("x")) + parseFloat(d3.select(this).attr("width")/2) + paddingAroundChart)
-            .attr("y",parseFloat(d3.select(this).attr("y")) + paddingAroundChart - 5)
-            .attr("font-family", myFont)
-            .attr("fill", "#000000")
-            .attr("id", "bar-tooltip");
-          })
-          .on("mouseout", function(){
+          .style("stroke", "black");
+        
+        bars.on("mouseover", function(d){
+            d3.select("#bar-chart")
+              .append("text")
+              .text(d)
+              .attr("text-anchor","middle")
+              .attr("x", parseFloat(d3.select(this).attr("x")) + parseFloat(d3.select(this).attr("width")/2) + paddingAroundChart)
+              .attr("y",parseFloat(d3.select(this).attr("y")) + paddingAroundChart - 5)
+              .attr("font-family", myFont)
+              .attr("fill", "#000000")
+              .attr("id", "bar-tooltip");
+          });
+        
+        bars.on("mouseout", function(){
             d3.select("#bar-tooltip").remove();
-          })
-        .on("click", function(d){
-          
+          });
+        
+        bars.on("click", function(d){
+          d3.selectAll("#bar-field").style("fill", "lightblue");
+          d3.select(this)
+            .style("fill", "orange")
+          .attr("opacity", 0.5);
           // =========================
           // EMBEDDED SCATTER
           // ========================
@@ -138,8 +146,8 @@
               .attr("cx", function(d, i) {return cityMPG_scale(d.AverageCityMPG);})
               .attr("cy", function(d, i) {return hwyMPG_scale(d.AverageHighwayMPG);})
               .attr("r", function(d) {return Number(d.EngineCylinders)+2;})
-              .style("fill", "lightblue")
-              .style("opacity", 0.1)
+              .style("fill", "orange")
+              .style("opacity", 0.5)
               .style("stroke", "black");
 
           // scatter -- y-axis
