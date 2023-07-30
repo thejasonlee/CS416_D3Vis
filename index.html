@@ -234,8 +234,8 @@
           .attr("height", canvasHeight);
 
         // Scales
-        cityMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([0,canvasWidth - 2*paddingAroundChart]);
-        hwyMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([canvasHeight - 2*paddingAroundChart,0]);
+        cityMPG_scale = d3.scaleLinear().domain([0,150]).range([0,canvasWidth - 2*paddingAroundChart]);
+        hwyMPG_scale = d3.scaleLinear().domain([0,150]).range([canvasHeight - 2*paddingAroundChart,0]);
 
         // scatter plot
         var scatterPoints = d3.select("#scatter-plot")
@@ -259,7 +259,7 @@
           .attr("transform", "translate(" + paddingAroundChart +"," + paddingAroundChart +")")
           .call(d3.axisLeft(hwyMPG_scale)
                 .tickFormat(d3.format("1.0s"))
-                .tickValues([10,20,50,100])
+                .tickValues([0,10,20,40,60,80,100])
                )
           .attr("font-family", myFont);
 
@@ -281,7 +281,7 @@
           .attr("transform", "translate(" + paddingAroundChart +"," + (canvasHeight - paddingAroundChart)  +")")
           .call(d3.axisBottom(cityMPG_scale)
                 .tickFormat(d3.format("1.0s"))
-                .tickValues([10,20,50,100]))
+                .tickValues([0,10,20,40,60,80,100]))
           .attr("font-family", myFont);
 
         // scatter -- x-axis title
