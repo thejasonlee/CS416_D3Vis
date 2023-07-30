@@ -144,14 +144,9 @@
         // Canvas
         d3.select("body")
           .append("svg")
-          .attr("id", "scatter-chart")
+          .attr("id", "scatter-plot")
           .attr("width", canvasWidth)
           .attr("height", canvasHeight);
-        
-        d3.select("svg")
-        .attr("width", canvasWidth)
-        .attr("height", canvasHeight)
-        .attr("id", "scatter-plot");
         
         // Scatter plot
         cityMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([0,canvasWidth - 2*paddingAroundChart]);
