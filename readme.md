@@ -13,3 +13,6 @@ While small, this project shows many features:
 - the selectAll(), data(), enter() pattern to create many objects quickly
 - event-based programming, using event listeners
 - many story-telling features (like scenes, parameter passing, consistency between scenes for user orientation, etc)
+
+
+If you would like to play with d3.js, I encourage you to copy and paste this code into https://jsbin.com/ and have a go! It is simple to get going!
