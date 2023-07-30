@@ -99,6 +99,16 @@
         .attr("font-size", axisFontSize)
         .text("Average City MPG");
         
+        // scatter -- prompt
+        d3.select("#scatter-plot")
+        .append("text")
+        .attr("class", "scatter prompt")
+        .attr("text-anchor", "start")
+        .attr("y", 100)
+        .attr("x", 75)
+          .attr("font-size", axisFontSize)
+        .text("Click in chart to return");
+        
         // new canvas for bar chart
         d3.select("body")
           .append("svg")
@@ -157,6 +167,16 @@
         .attr("transform", "rotate(-90)")
           .attr("font-size", axisFontSize)
         .text("Number of Cars in Dataset");
+        
+        // bar -- prompt
+        d3.select("#bar-chart")
+        .append("text")
+        .attr("class", "bar prompt")
+        .attr("text-anchor", "start")
+        .attr("y", 100)
+        .attr("x", 250)
+          .attr("font-size", axisFontSize)
+        .text("Click bars for more");
           
         
       }
