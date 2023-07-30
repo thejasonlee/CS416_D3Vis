@@ -138,18 +138,22 @@
           .attr("width", (canvasWidth - 2*paddingAroundChart)/engineSizeCounts.length)
           .attr("height", function(d) {return canvasHeight - 2*paddingAroundChart - bar_y_scale(d);})
           .style("fill", "lightblue")
-          .style("stroke", "black");
+          .style("stroke", "black")
+          .on("mouseover", function(d){
+            d3.select("#bar-chart").append("text")
+            .text(d)
+            .attr("text-anchor","middle")
+            .attr("x", parseFloat(d3.select(this).attr("x")) + parseFloat(d3.select(this).attr("width")/2) + paddingAroundChart)
+            .attr("y",parseFloat(d3.select(this).attr("y")) + paddingAroundChart - 5)
+            .attr("font-family", myFont)
+            .attr("fill", "#000000")
+            .attr("id", "bar-tooltip");
+          })
+          .on("mouseout", function(){
+            d3.select("#bar-tooltip").remove();
+        });
         
-        d3.select("#bar-chart")
-        .selectAll("text")
-        .data(engineSizeCounts)
-        .enter()
-        .append("text")
-        .text(function (d) {return d;})
-        .attr("text-anchor","middle")
-        .attr("x", function(d,i){return i*((canvasWidth-2*paddingAroundChart) / engineSizeCounts.length) + 67})
-        .attr("y",function(d){return bar_y_scale(d) + paddingAroundChart - 5;})
-        .attr("font-family", myFont);
+        
          
         
         // bar -- x-axis
