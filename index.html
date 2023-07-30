@@ -33,7 +33,7 @@
           return totalData.filter(function(car) { return car.EngineCylinders === String(numCyl); });
         }
         
-        //console.log("filtered on cylinder:", getFilteredData(data, 3));
+        //console.log("filtered on cylinder:", getFilteredData(data, 4));
         
         
         // ---------------------------
@@ -94,7 +94,8 @@
             d3.select("#bar-tooltip").remove();
           });
         
-        bars.on("click", function(d){
+        bars.on("click", function(d,i){
+          console.log("i is:", engineSizes[i]);
           d3.selectAll("#bar-field").style("fill", "lightblue");
           d3.select(this)
             .style("fill", "orange")
@@ -110,7 +111,7 @@
             .attr("height", canvasHeight);
 
           // Scales
-          var scatterData = getFilteredData(data, d);
+          var scatterData = getFilteredData(data, engineSizes[i]);
 
           function getCityMPGValues(someData){
             var result = [];
@@ -135,7 +136,7 @@
           hwyMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([canvasHeight - 2*paddingAroundChart,0]);
 
           // scatter plot
-          d3.select("#scatter-plot")
+          var scatterPoints = d3.select("#scatter-plot")
             .append("g")
               .attr("transform", "translate(" + paddingAroundChart + "," + paddingAroundChart + ")")
               .attr("id", "scatter-chart-field")
@@ -202,6 +203,9 @@
           .text("Click in chart to return")
           .attr("font-family", myFont);
           
+          scatterPoints.on("click", function(){
+            
+          });
           
           
           
