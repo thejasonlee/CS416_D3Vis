@@ -47,6 +47,9 @@
         var engineSizeCounts = [10,1,4,52,39,30,3,7];
         var paddingAroundBars = 0;
         var myFont = "sans-sarif";
+        var myOpacity = 0.5;
+        var unselectedColour = "lightblue";
+        var selectedColour = "orange"
         
         // ---------------------------
         // BAR CHART
@@ -75,10 +78,10 @@
           .attr("y", function(d) {return bar_y_scale(d)})
           .attr("width", (canvasWidth - 2*paddingAroundChart)/engineSizeCounts.length)
           .attr("height", function(d) {return canvasHeight - 2*paddingAroundChart - bar_y_scale(d);})
-          .style("fill", "lightblue")
+          .style("fill", unselectedColour)
           .style("stroke", "black");
         
-        bars.on("mouseover", function(d){
+          bars.on("mouseover", function(d){
             d3.select("#bar-chart")
               .append("text")
               .text(d)
@@ -95,128 +98,59 @@
           });
         
         bars.on("click", function(d,i){
-          console.log("i is:", engineSizes[i]);
-          d3.selectAll("#bar-field").style("fill", "lightblue");
+          d3.selectAll("#bar-field")
+            .style("fill", unselectedColour);
+          
           d3.select(this)
-            .style("fill", "orange")
-          .attr("opacity", 0.5);
-          // =========================
-          // EMBEDDED SCATTER
-          // ========================
-          // Canvas
-          d3.select("body")
-            .append("svg")
-            .attr("id", "scatter-plot")
-            .attr("width", canvasWidth)
-            .attr("height", canvasHeight);
-
-          // Scales
-          var scatterData = getFilteredData(data, engineSizes[i]);
-
-          function getCityMPGValues(someData){
-            var result = [];
-            for (let i = 0; i < someData.length; i++) {
-                result.push(parseInt(someData[i].AverageCityMPG));
-            }
-            return result;
-          }
-
-          function getHighwayMPGValues(someData){
-            var result = [];
-            for (let i = 0; i < someData.length; i++) {
-                result.push(parseInt(someData[i].AverageHighwayMPG));
-            }
-            return result;
-          }
-          //console.log(getHighwayMPGValues(data));
-
-          var maxCityMPG = d3.max(getCityMPGValues(scatterData));
-          var maxHwyMPG = d3.max(getHighwayMPGValues(scatterData));
-          cityMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([0,canvasWidth - 2*paddingAroundChart]);
-          hwyMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([canvasHeight - 2*paddingAroundChart,0]);
-
-          // scatter plot
-          var scatterPoints = d3.select("#scatter-plot")
-            .append("g")
-              .attr("transform", "translate(" + paddingAroundChart + "," + paddingAroundChart + ")")
-              .attr("id", "scatter-chart-field")
-              .selectAll("circle")
-              .data(scatterData)
-              .enter()
-              .append("circle")
-              .attr("cx", function(d, i) {return cityMPG_scale(d.AverageCityMPG);})
-              .attr("cy", function(d, i) {return hwyMPG_scale(d.AverageHighwayMPG);})
-              .attr("r", function(d) {return Number(d.EngineCylinders)+2;})
-              .style("fill", "orange")
-              .style("opacity", 0.5)
-              .style("stroke", "black");
-
-          // scatter -- y-axis
-          d3.select("#scatter-plot")
-          .append("g")
-          .attr("transform", "translate(" + paddingAroundChart +"," + paddingAroundChart +")")
-          .call(d3.axisLeft(hwyMPG_scale)
-                .tickFormat(d3.format("1.0s"))
-                .tickValues([10,20,50,100])
-               )
-          .attr("font-family", myFont);
-
-          // scatter -- y-axis title
-          d3.select("#scatter-plot")
-          .append("text")
-          .attr("text-anchor", "middle")
-          .attr("y", paddingAroundChart*2/5)
-          .attr("x", -(canvasHeight/2))
-          .attr("transform", "rotate(-90)")
-            .attr("font-size", axisFontSize)
-          .text("Average Highway MPG")
-          .attr("font-family", myFont);
-
-
-          // scatter -- x-axis
-          d3.select("#scatter-plot")
-          .append("g")
-          .attr("transform", "translate(" + paddingAroundChart +"," + (canvasHeight - paddingAroundChart)  +")")
-          .call(d3.axisBottom(cityMPG_scale)
-                .tickFormat(d3.format("1.0s"))
-                .tickValues([10,20,50,100]))
-          .attr("font-family", myFont);
-
-          // scatter -- x-axis title
-          d3.select("#scatter-plot")
-          .append("text")
-          .attr("text-anchor", "middle")
-          .attr("x", canvasWidth / 2)
-          .attr("y", canvasHeight - 10)
-          .attr("font-size", axisFontSize)
-          .text("Average City MPG")
-          .attr("font-family", myFont);
-
-          // scatter -- prompt
-          d3.select("#scatter-plot")
-          .append("text")
-          .attr("class", "scatter prompt")
-          .attr("text-anchor", "start")
-          .attr("y", 100)
-          .attr("x", 75)
-            .attr("font-size", axisFontSize)
-          .text("Click in chart to return")
-          .attr("font-family", myFont);
+            .style("fill", selectedColour)
+            .attr("opacity", myOpacity);
           
-          scatterPoints.on("click", function(){
-            
-          });
+          // Update scatter colours
+          var selectedDataForCrossPlot = getFilteredData(data, engineSizes[i]);
           
+          d3.select("#scatter-points")
+            .selectAll("circle")
+          .remove();
           
+          d3.select("#scatter-points")
+          .selectAll("circle")
+            .data(selectedDataForCrossPlot)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d, i) {return cityMPG_scale(d.AverageCityMPG);})
+            .attr("cy", function(d, i) {return hwyMPG_scale(d.AverageHighwayMPG);})
+            .attr("r", 4)
+            .style("fill", selectedColour)
+            .style("opacity", myOpacity)
+            .style("stroke", "black");
+
+        });
+        
+        bars.on("dblclick", function(d,i){
           
+          // Update bar colours
+          d3.selectAll("rect")
+            .style("fill", unselectedColour);
           
+          d3.select("#scatter-points")
+            .selectAll("circle")
+          .remove();
           
-          
-          
-          
-          
-          
-        }); 
+          d3.select("#scatter-points")
+          .selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d, i) {return cityMPG_scale(d.AverageCityMPG);})
+            .attr("cy", function(d, i) {return hwyMPG_scale(d.AverageHighwayMPG);})
+            .attr("r", 4)
+            .style("fill", unselectedColour)
+            .style("opacity", myOpacity)
+            .style("stroke", "black");
+
+        });
+        
+        
         
         // bar -- x-axis
         d3.select("#bar-chart")
@@ -274,7 +208,91 @@
         // ---------------------------
         // SCATTER CHART
         // ---------------------------
-        
+
+        // Canvas
+        d3.select("body")
+          .append("svg")
+          .attr("id", "scatter-plot")
+          .attr("width", canvasWidth)
+          .attr("height", canvasHeight);
+
+        // Scales
+        cityMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([0,canvasWidth - 2*paddingAroundChart]);
+        hwyMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([canvasHeight - 2*paddingAroundChart,0]);
+
+        // scatter plot
+        var scatterPoints = d3.select("#scatter-plot")
+        .append("g")
+        .attr("transform", "translate(" + paddingAroundChart + "," + paddingAroundChart + ")")
+        .attr("id", "scatter-points")
+        .selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", function(d, i) {return cityMPG_scale(d.AverageCityMPG);})
+        .attr("cy", function(d, i) {return hwyMPG_scale(d.AverageHighwayMPG);})
+        .attr("r", 4)
+        .style("fill", unselectedColour)
+        .style("opacity", myOpacity)
+        .style("stroke", "black");
+
+        // scatter -- y-axis
+        d3.select("#scatter-plot")
+          .append("g")
+          .attr("transform", "translate(" + paddingAroundChart +"," + paddingAroundChart +")")
+          .call(d3.axisLeft(hwyMPG_scale)
+                .tickFormat(d3.format("1.0s"))
+                .tickValues([10,20,50,100])
+               )
+          .attr("font-family", myFont);
+
+        // scatter -- y-axis title
+        d3.select("#scatter-plot")
+          .append("text")
+          .attr("text-anchor", "middle")
+          .attr("y", paddingAroundChart*2/5)
+          .attr("x", -(canvasHeight/2))
+          .attr("transform", "rotate(-90)")
+          .attr("font-size", axisFontSize)
+          .text("Average Highway MPG")
+          .attr("font-family", myFont);
+
+
+        // scatter -- x-axis
+        d3.select("#scatter-plot")
+          .append("g")
+          .attr("transform", "translate(" + paddingAroundChart +"," + (canvasHeight - paddingAroundChart)  +")")
+          .call(d3.axisBottom(cityMPG_scale)
+                .tickFormat(d3.format("1.0s"))
+                .tickValues([10,20,50,100]))
+          .attr("font-family", myFont);
+
+        // scatter -- x-axis title
+        d3.select("#scatter-plot")
+          .append("text")
+          .attr("text-anchor", "middle")
+          .attr("x", canvasWidth / 2)
+          .attr("y", canvasHeight - 10)
+          .attr("font-size", axisFontSize)
+          .text("Average City MPG")
+          .attr("font-family", myFont);
+
+        // scatter -- prompt
+        d3.select("#scatter-plot")
+          .append("text")
+          .attr("class", "scatter prompt")
+          .attr("text-anchor", "start")
+          .attr("y", 100)
+          .attr("x", 75)
+          .attr("font-size", axisFontSize)
+          .text("Click in chart to return")
+          .attr("font-family", myFont);
+
+        scatterPoints.on("click", function(){
+
+        });
+
+      
         
         
         
