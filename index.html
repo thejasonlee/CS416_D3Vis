@@ -33,7 +33,7 @@
           return totalData.filter(function(car) { return car.EngineCylinders === String(numCyl); });
         }
         
-        // console.log("filtered on cylinder:", getFilteredData(data, 3));
+        //console.log("filtered on cylinder:", getFilteredData(data, 3));
         
         
         // ---------------------------
@@ -154,9 +154,28 @@
           .attr("width", canvasWidth)
           .attr("height", canvasHeight);
         
+        function getCityMPGValues(someData){
+          var result = [];
+          for (let i = 0; i < someData.length; i++) {
+              result.push(parseInt(someData[i].AverageCityMPG));
+          }
+          return result;
+        }
+        
+        function getHighwayMPGValues(someData){
+          var result = [];
+          for (let i = 0; i < someData.length; i++) {
+              result.push(parseInt(someData[i].AverageHighwayMPG));
+          }
+          return result;
+        }
+        console.log(getHighwayMPGValues(data));
+        
         // Scatter plot
-        cityMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([0,canvasWidth - 2*paddingAroundChart]);
-        hwyMPG_scale = d3.scaleLog().base(10).domain([10,150]).range([canvasHeight - 2*paddingAroundChart,0]);
+        var maxCityMPG = d3.max(getCityMPGValues(data));
+        var maxHwyMPG = d3.max(getHighwayMPGValues(data));
+        cityMPG_scale = d3.scaleLog().base(10).domain([10,maxCityMPG]).range([0,canvasWidth - 2*paddingAroundChart]);
+        hwyMPG_scale = d3.scaleLog().base(10).domain([10,maxHwyMPG]).range([canvasHeight - 2*paddingAroundChart,0]);
         
         // scatter plot
         d3.select("#scatter-plot")
