@@ -11,8 +11,8 @@
         
         // JSON of number of cylinders: number of occurances in dataset
         var cylinderTally = data.reduce(function(acc, car) {
-          if (!acc[car.EngineCylinders])
-            acc[car.EngineCylinders] = 1;
+          if (!acc[parseInt(car.EngineCylinders)])
+            acc[parseInt(car.EngineCylinders)] = Number(1);
           else
             acc[car.EngineCylinders]++;   
           return acc;
@@ -31,6 +31,8 @@
         var canvasHeight = 400;
         var axisFontSize = 18;
         var engineSizes = [0,2,3,4,6,8,10,12];
+        var engineSizeCounts = [10,1,4,52,39,30,3,7];
+        var paddingAroundBars = 0;
         
         // Canvas
         d3.select("svg")
@@ -98,12 +100,64 @@
         .text("Average City MPG");
         
         // new canvas for bar chart
-        d3.select("#body")
+        d3.select("body")
           .append("svg")
           .attr("id", "bar-chart")
           .attr("width", canvasWidth)
           .attr("height", canvasHeight)
         
+        // Bar chart scales
+        bar_x_scale = d3.scaleBand().domain([0,2,3,4,6,8,10,12]).range([0,canvasWidth - 2*paddingAroundChart]);
+        bar_y_scale = d3.scaleLinear().domain([0,52]).range([canvasHeight - 2*paddingAroundChart,0]);
+        
+        d3.select("#bar-chart")
+          .append("g")
+          //.attr("transform", "translate(" + paddingAroundChart + "," + paddingAroundChart + ")")
+          .selectAll("rect")
+          .data(engineSizeCounts)
+          .enter()
+          .append("rect")
+          .attr("x",function(d,i) {return i*((canvasWidth - 2*paddingAroundChart)/engineSizeCounts.length) + paddingAroundChart;})
+          .attr("y", function(d) {return bar_y_scale(d) + paddingAroundChart})
+          .attr("width", (canvasWidth - 2*paddingAroundChart)/engineSizeCounts.length)
+          .attr("height", function(d) {return canvasHeight - 2*paddingAroundChart - bar_y_scale(d);})
+          .style("fill", "lightblue")
+          .style("stroke", "black");
+        
+        // bar -- x-axis
+        d3.select("#bar-chart")
+        .append("g")
+        .attr("transform", "translate(" + paddingAroundChart +"," + (canvasHeight - paddingAroundChart)  +")")
+        .call(d3.axisBottom(bar_x_scale).tickValues([0,2,3,4,6,8,10,12]));
+        
+        // bar -- x-axis title
+        d3.select("#bar-chart")
+        .append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "middle")
+        .attr("x", canvasWidth / 2)
+        .attr("y", canvasHeight - 10)
+        .attr("font-size", axisFontSize)
+        .text("Number of Cylindars");
+        
+        
+        // bar -- y-axis
+        d3.select("#bar-chart")
+        .append("g")
+        .attr("transform", "translate(" + paddingAroundChart +"," + paddingAroundChart +")")
+        .call(d3.axisLeft(bar_y_scale));
+        
+        // bar -- y-axis title
+        d3.select("#bar-chart")
+        .append("text")
+        .attr("class", "y label")
+        .attr("text-anchor", "middle")
+        .attr("y", paddingAroundChart*2/5)
+        .attr("x", -(canvasHeight/2))
+        .attr("transform", "rotate(-90)")
+          .attr("font-size", axisFontSize)
+        .text("Number of Cars in Dataset");
+          
         
       }
     </script>
