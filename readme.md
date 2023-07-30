@@ -1,3 +1,5 @@
+Access the viz here: https://thejasonlee.github.io/CS416_D3Vis/
+
 This is a simple project I completed as part of an assignment for Data Visualization, CS416, at UIUC for the MCS program.
 
 This project uses vanilla D3.js to generate a couple of charts, with some basic interactivity.
