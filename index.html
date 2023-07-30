@@ -42,7 +42,7 @@
         var paddingAroundChart = 50;
         var canvasWidth = 400;
         var canvasHeight = 400;
-        var axisFontSize = 18;
+        var axisFontSize = 15;
         var engineSizes = [0,2,3,4,6,8,10,12];
         var engineSizeCounts = [10,1,4,52,39,30,3,7];
         var paddingAroundBars = 0;
@@ -80,6 +80,74 @@
           .attr("height", function(d) {return canvasHeight - 2*paddingAroundChart - bar_y_scale(d);})
           .style("fill", unselectedColour)
           .style("stroke", "black");
+        
+        // bar -- x-axis
+        d3.select("#bar-chart")
+        .append("g")
+        .attr("transform", "translate(" + paddingAroundChart +"," + (canvasHeight - paddingAroundChart)  +")")
+        .call(d3.axisBottom(bar_x_scale).tickValues([0,2,3,4,6,8,10,12]));
+        
+        // bar -- x-axis title
+        d3.select("#bar-chart")
+        .append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", canvasWidth / 2)
+        .attr("y", canvasHeight - 10)
+        .attr("font-size", axisFontSize)
+        .text("Number of Cylindars")
+        .attr("font-family", myFont);
+        
+        // bar -- y-axis
+        d3.select("#bar-chart")
+        .append("g")
+        .attr("transform", "translate(" + paddingAroundChart +"," + paddingAroundChart +")")
+        .call(d3.axisLeft(bar_y_scale));
+        
+        // bar -- y-axis title
+        d3.select("#bar-chart")
+        .append("text")
+        .attr("text-anchor", "middle")
+        .attr("y", paddingAroundChart*2/5)
+        .attr("x", -(canvasHeight/2))
+        .attr("transform", "rotate(-90)")
+          .attr("font-size", axisFontSize)
+        .text("Number of Cars in Dataset")
+        .attr("font-family", myFont);
+        
+        // bar -- prompts
+        d3.select("#bar-chart")
+        .append("text")
+        .attr("text-anchor", "start")
+        .attr("y", 70)
+        .attr("x", 220)
+          .attr("font-size", axisFontSize)
+        .text("1. Mouseover for tooltip")
+        .attr("font-family", myFont);
+        
+        d3.select("#bar-chart")
+        .append("text")
+        .attr("text-anchor", "start")
+        .attr("y", 85)
+        .attr("x", 220)
+          .attr("font-size", axisFontSize)
+        .text("2. Single click bar to filter")
+        .attr("font-family", myFont);
+        
+        d3.select("#bar-chart")
+        .append("text")
+        .attr("text-anchor", "start")
+        .attr("y", 100)
+        .attr("x", 220)
+          .attr("font-size", axisFontSize)
+        .text("3. Double click bar to unfilter")
+        .attr("font-family", myFont);
+        
+        
+        
+        
+        // ---------------------------
+        // BAR EVENT LISTENERS
+        // ---------------------------
         
           bars.on("mouseover", function(d){
             d3.select("#bar-chart")
@@ -152,58 +220,7 @@
         
         
         
-        // bar -- x-axis
-        d3.select("#bar-chart")
-        .append("g")
-        .attr("transform", "translate(" + paddingAroundChart +"," + (canvasHeight - paddingAroundChart)  +")")
-        .call(d3.axisBottom(bar_x_scale).tickValues([0,2,3,4,6,8,10,12]));
         
-        // bar -- x-axis title
-        d3.select("#bar-chart")
-        .append("text")
-        .attr("text-anchor", "middle")
-        .attr("x", canvasWidth / 2)
-        .attr("y", canvasHeight - 10)
-        .attr("font-size", axisFontSize)
-        .text("Number of Cylindars")
-        .attr("font-family", myFont);
-        
-        
-        // bar -- y-axis
-        d3.select("#bar-chart")
-        .append("g")
-        .attr("transform", "translate(" + paddingAroundChart +"," + paddingAroundChart +")")
-        .call(d3.axisLeft(bar_y_scale));
-        
-        // bar -- y-axis title
-        d3.select("#bar-chart")
-        .append("text")
-        .attr("text-anchor", "middle")
-        .attr("y", paddingAroundChart*2/5)
-        .attr("x", -(canvasHeight/2))
-        .attr("transform", "rotate(-90)")
-          .attr("font-size", axisFontSize)
-        .text("Number of Cars in Dataset")
-        .attr("font-family", myFont);
-        
-        // bar -- prompts
-        d3.select("#bar-chart")
-        .append("text")
-        .attr("text-anchor", "start")
-        .attr("y", 100)
-        .attr("x", 220)
-          .attr("font-size", axisFontSize)
-        .text("Click bars for detail")
-        .attr("font-family", myFont);
-        
-        d3.select("#bar-chart")
-        .append("text")
-        .attr("text-anchor", "start")
-        .attr("y", 75)
-        .attr("x", 220)
-          .attr("font-size", axisFontSize)
-        .text("Mouseover for tooltip")
-        .attr("font-family", myFont);
         
         // ---------------------------
         // SCATTER CHART
@@ -285,7 +302,7 @@
           .attr("y", 100)
           .attr("x", 75)
           .attr("font-size", axisFontSize)
-          .text("Click in chart to return")
+          .text("This chart is read only")
           .attr("font-family", myFont);
 
         scatterPoints.on("click", function(){
