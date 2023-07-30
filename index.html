@@ -258,8 +258,7 @@
           .append("g")
           .attr("transform", "translate(" + paddingAroundChart +"," + paddingAroundChart +")")
           .call(d3.axisLeft(hwyMPG_scale)
-                .tickFormat(d3.format("1.0s"))
-                .tickValues([0,10,20,40,60,80,100])
+                .tickValues([0,10,20,40,60,80,100,120,140])
                )
           .attr("font-family", myFont);
 
@@ -280,8 +279,7 @@
           .append("g")
           .attr("transform", "translate(" + paddingAroundChart +"," + (canvasHeight - paddingAroundChart)  +")")
           .call(d3.axisBottom(cityMPG_scale)
-                .tickFormat(d3.format("1.0s"))
-                .tickValues([0,10,20,40,60,80,100]))
+                .tickValues([0,10,20,40,60,80,100,120,140]))
           .attr("font-family", myFont);
 
         // scatter -- x-axis title
